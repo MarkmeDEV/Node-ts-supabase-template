@@ -4,8 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import authRouter from "./routes/auth/Authentication";
 import dotenv from "dotenv"
-import swaggerUI from "swagger-ui-express";
-import { swaggerSpec } from "../swagger";
+import { setupSwagger } from "./swagger";
 const app = express();
 dotenv.config();
 
@@ -17,9 +16,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], 
 }))
 
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use('/auth', authRouter);
+setupSwagger(app);
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Listening on port ${process.env.PORT || 3000}`)

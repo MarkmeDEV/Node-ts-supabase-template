@@ -4,46 +4,7 @@ import { generateAccessToken, generateRefreshToken } from "../../services/TokenG
 import asyncHandler from "express-async-handler";  // Import asyncHandler
 import supabase from "../../database/SupabaseClient";
 import bcrypt from "bcrypt";
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: User Login
- *     description: Authenticates a user and returns an access token.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: user@example.com
- *               password:
- *                 type: string
- *                 example: securePassword123
- *     responses:
- *       200:
- *         description: Login successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Sign-in successful
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI...
- *       400:
- *         description: Missing required inputs
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Server error
- */
+
 export const Login = asyncHandler(async (req:Request, res:Response) :Promise<void> => {
     const { email, password } = req.body;
 
