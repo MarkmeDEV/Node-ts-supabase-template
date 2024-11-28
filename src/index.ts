@@ -5,6 +5,7 @@ import morgan from "morgan";
 import authRouter from "./routes/auth/Authentication";
 import dotenv from "dotenv"
 import { setupSwagger } from "./swagger";
+import todoRouter from "./routes/todo/Todo";
 const app = express();
 dotenv.config();
 
@@ -18,6 +19,11 @@ app.use(cors({
 
 
 app.use('/auth', authRouter);
+
+app.use('/api/v1/', todoRouter);
+
+// app.use('/ap1/v1', todoRouter);
+
 setupSwagger(app);
 
 app.listen(process.env.PORT || 3000, () => {
