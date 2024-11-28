@@ -4,7 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import authRouter from "./routes/auth/Authentication";
 import dotenv from "dotenv"
-
+import swaggerUI from "swagger-ui-express";
+import { swaggerSpec } from "../swagger";
 const app = express();
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], 
 }))
 
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use('/auth', authRouter);
 
