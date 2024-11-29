@@ -2,6 +2,6 @@ import express from "express";
 import { getUser } from "../../controller/users/Users"
 const UserRouter = express();
 
-UserRouter.get('/users', getUser);
+UserRouter.get('/user-information', getUser);
 
 export default UserRouter;

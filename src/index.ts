@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 import { setupSwagger } from "./swagger";
 import todoRouter from "./routes/todo/Todo";
 import cookieParser from "cookie-parser";
+import UserRouter from "./routes/users/Users";
 
 const app = express();
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cors({
 app.use('/auth', authRouter);
 
 app.use('/api/v1/', todoRouter);
+app.use('/api/v1/', UserRouter);
 
 setupSwagger(app);
 
