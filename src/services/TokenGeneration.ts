@@ -1,4 +1,3 @@
-import { Response } from "express";
 import jwt from "jsonwebtoken";
 
 export const generateAccessToken = (userId: number) => {

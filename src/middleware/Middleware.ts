@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 declare global {
     namespace Express {
         interface Request {
-            user?: string | jwt.JwtPayload;
+            user?: string | jwt.JwtPayload; // Adjust the type according to your JWT payload
         }
     }
 }

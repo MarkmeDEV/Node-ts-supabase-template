@@ -1,5 +1,5 @@
 import express from "express";
-import { Login, Register } from "../../controller/auth/Authentication";
+import { generateAccessTokenApi, Login, Register } from "../../controller/auth/Authentication";
 
 const authRouter = express.Router();
 
@@ -119,5 +119,7 @@ authRouter.post("/login", Login);
  *         description: Internal server error
  */
 authRouter.post("/register", Register);
+
+authRouter.post("/generate-refresh-token", generateAccessTokenApi);
 
 export default authRouter;
