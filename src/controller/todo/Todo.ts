@@ -60,8 +60,27 @@ export const updateTodo = expressAsyncHandler(async (req, res):Promise<void> => 
 
     const { id, title, description, tags } = req.body;
 
-    res.status(200).json({ message: "Todo item successfully updated." });
+    const { data: todo, error: fetchError } = await supabase
+    .from('todos')
+    .select('id')
+    .eq('id', id)
+    .single();
 
+    if (fetchError || !todo) {
+        res.status(404).json({ message: "Todo item not found." });
+        return;
+    }
 
+    const { error:updateError } = await supabase
+    .from('todos')
+    .update({ title: title, description: description, tags: tags })
+    .eq('id', id)
+
+    if(updateError){
+        res.status(400).json({ message: updateError.message || "Error updating the todo list."})
+        return;
+    }
+
+    res.status(200).json({ message: "Successfully updated the todo item" });
 
 })
