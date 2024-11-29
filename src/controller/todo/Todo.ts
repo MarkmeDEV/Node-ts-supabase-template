@@ -24,7 +24,7 @@ export const createTodo = expressAsyncHandler(async  (req, res): Promise<void> =
         return;
     }
 
-    res.status(200).json({message: "Created todos" })
+    res.status(200).json({message: "Successfully created a todo item" })
     return;
 });
 
