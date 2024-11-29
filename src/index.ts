@@ -9,7 +9,7 @@ import todoRouter from "./routes/todo/Todo";
 const app = express();
 dotenv.config();
 
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 app.use(express.json());
 app.use(cors({
     origin: '*', 
@@ -21,8 +21,6 @@ app.use(cors({
 app.use('/auth', authRouter);
 
 app.use('/api/v1/', todoRouter);
-
-// app.use('/ap1/v1', todoRouter);
 
 setupSwagger(app);
 

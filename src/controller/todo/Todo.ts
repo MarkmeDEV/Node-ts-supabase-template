@@ -1,15 +1,29 @@
 import expressAsyncHandler from "express-async-handler";
-import { Todo } from "../../models/todo/todoType";
+import supabase from "../../database/SupabaseClient";
+
+const validTags = ['working', 'not started', 'paused', 'completed']
 
 export const createTodo = expressAsyncHandler(async  (req, res): Promise<void> => {
     const { title, description, tags } = req.body;
 
-    const data: Omit <Todo, "id" | "created_at"> = {
-        title: title,
-        description: description,
-        tags: tags,
+    if(title === ''  ||description === '' || tags === ''){
+        res.status(400).json({ message: "All fields are required" })
     }
 
-    res.status(200).json({message: "Created todos", data: data})
+    if(!validTags.includes(tags)){
+         res.status(400).json({ message: "Invalid tag value" });
+         return;
+    }
+
+    const { error:insertError } = await supabase
+    .from('todos')
+    .insert({ title: title, description: description, tags: tags });
+
+    if(insertError){
+        res.status(500).json({ message: insertError.message });
+        return;
+    }
+
+    res.status(200).json({message: "Created todos" })
     return;
 });
