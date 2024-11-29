@@ -99,3 +99,10 @@ export const getTodo = expressAsyncHandler(async (req, res):Promise<void> => {
     res.status(200).json({ message: "Successfully fetch all the todo items", data: allTodo });
 
 })
+
+export const getTodoInTag = expressAsyncHandler(async (req, res):Promise<void> => {
+    const { tag } = req.query;
+
+    res.status(200).json({ message: `Here's all the todo items with ${tag}`})
+    
+});

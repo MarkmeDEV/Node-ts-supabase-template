@@ -120,6 +120,36 @@ authRouter.post("/login", Login);
  */
 authRouter.post("/register", Register);
 
+/**
+ * @swagger
+ * /auth/generate-refresh-token:
+ *   post:
+ *     summary: Generate a new access token using the refresh token stored in cookies
+ *     tags: [Authentication]
+ *     description: Use the refresh token stored in cookies to generate a new access token once the previous access token has expired.
+ *     responses:
+ *       200:
+ *         description: Successfully generated a new access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *                   example: Access token successfully generated
+ *                 accessToken:
+ *                   type: string
+ *                   description: The new access token
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       400:
+ *         description: Invalid or expired refresh token || No refresh token provided
+ *       401:
+ *         description: Refresh token has expired, please log in again.
+ *       500:
+ *         description: Error verifying the refresh token. Please try again later.
+ */
 authRouter.post("/generate-refresh-token", generateAccessTokenApi);
 
 export default authRouter;
