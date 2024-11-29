@@ -6,11 +6,14 @@ import authRouter from "./routes/auth/Authentication";
 import dotenv from "dotenv"
 import { setupSwagger } from "./swagger";
 import todoRouter from "./routes/todo/Todo";
+import cookieParser from "cookie-parser";
+
 const app = express();
 dotenv.config();
 
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
     origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
@@ -21,8 +24,6 @@ app.use(cors({
 app.use('/auth', authRouter);
 
 app.use('/api/v1/', todoRouter);
-
-// app.use('/ap1/v1', todoRouter);
 
 setupSwagger(app);
 

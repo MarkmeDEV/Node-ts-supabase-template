@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-// import { LoginReqBody } from "../../models/authentication/Auth";
 import { generateAccessToken, generateRefreshToken } from "../../services/TokenGeneration";
-import asyncHandler from "express-async-handler";  // Import asyncHandler
+import asyncHandler from "express-async-handler"; 
 import supabase from "../../database/SupabaseClient";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
+import { decodedToken } from "../../models/authentication/Auth";
 
 export const Login = asyncHandler(async (req:Request, res:Response) :Promise<void> => {
     const { email, password } = req.body;
@@ -97,7 +98,28 @@ export const Register =  asyncHandler(async (req:Request, res:Response) : Promis
 });
 
 
+export const generateAccessTokenApi = asyncHandler(async (req:Request, res:Response): Promise<void> => {
+    const refreshToken = req.cookies.refreshToken;
 
+    if(!refreshToken){
+        res.status(401).json({ message: "No refresh token provided" });
+        return;
+    }
 
+    try{ 
 
-// res.status(200).send({message: "Login Successfull", token: accessToken});
+        const decoded_token = jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH_TOKEN!) as decodedToken;
+
+        const accessToken =  generateAccessToken(decoded_token.id);
+            
+        res.status(200).json({ message: "Successfully generated access token", accessToken: accessToken });
+
+    }catch(error){
+        if (error instanceof jwt.TokenExpiredError) {
+            res.status(401).json({ message: "Refresh token has expired, please log in again." });
+          } else {
+            res.status(500).json({ message: "Error verifying the refresh token. Please try again later." });
+          }
+    }
+
+})
