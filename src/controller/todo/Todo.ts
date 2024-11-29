@@ -84,3 +84,18 @@ export const updateTodo = expressAsyncHandler(async (req, res):Promise<void> => 
     res.status(200).json({ message: "Successfully updated the todo item" });
 
 })
+
+export const getTodo = expressAsyncHandler(async (req, res):Promise<void> => {
+
+    const { data:allTodo, error:errorFetch } = await supabase
+    .from('todos')
+    .select()
+
+    if(errorFetch){
+        res.status(400).json({ message: errorFetch.message });
+        return;
+    }
+
+    res.status(200).json({ message: "Successfully fetch all the todo items", data: allTodo });
+
+})
