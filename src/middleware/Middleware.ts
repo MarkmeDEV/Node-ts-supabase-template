@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
+import supabase from "../database/SupabaseClient";
 
 declare global {
     namespace Express {
@@ -9,7 +10,7 @@ declare global {
     }
 }
 
-export const authenticateJwt = (req:Request, res:Response, next:NextFunction): void => {
+export const authenticateJwt = async (req:Request, res:Response, next:NextFunction): Promise<void> => {
     const accessToken = req.header("Authorization")?.replace("Bearer ", "");
 
     if(!accessToken){
@@ -17,22 +18,36 @@ export const authenticateJwt = (req:Request, res:Response, next:NextFunction): v
         return;
     }
 
-    try{ 
-        const decoded = jwt.verify(accessToken, process.env.SECRET_KEY!);
+    const { data, error } = await supabase.auth.getUser(accessToken);
 
-        req.user = decoded;
-
-        next();
-
-    }catch(error){
-        if(error instanceof Error){
-            if (error.name === "TokenExpiredError") {
-                res.status(401).json({ message: "Token has expired, please login again" });
-                return;
-            }
-        }
-
-        res.status(500).json({ message: "Invalid token" });
+    if(!data.user?.email?.endsWith('@gmail.com')){
+        res.status(401).json({ message: "Invalid token" });
         return;
     }
+
+    if(error){
+        res.status(401).json({ message: "Token has expired, please login again" });
+        return;
+    }
+
+    next();
+
+    // try{ 
+    //     const decoded = jwt.verify(accessToken, process.env.SECRET_KEY!);
+
+    //     req.user = decoded;
+
+    //     next();
+
+    // }catch(error){
+    //     if(error instanceof Error){
+    //         if (error.name === "TokenExpiredError") {
+    //             res.status(401).json({ message: "Token has expired, please login again" });
+    //             return;
+    //         }
+    //     }
+
+    //     res.status(500).json({ message: "Invalid token" });
+    //     return;
+    // }
 }

@@ -230,4 +230,5 @@ UserRouter.patch('/change-password',authenticateJwt, changePassword);
  *                   example: "Error updating the email."
  */
 UserRouter.put('/update-user-information', authenticateJwt, updateUserInformation);
+
 export default UserRouter;
