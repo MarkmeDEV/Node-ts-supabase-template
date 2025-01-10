@@ -68,6 +68,13 @@ export const SupabaseLogout = expressAsyncHandler(async (req:Request, res:Respon
         return;
     }
 
+    res.cookie('refresh_token', '', {
+        httpOnly: true,
+        secure: true, 
+        sameSite: 'strict', 
+        expires: new Date(0),
+    });
+
     res.status(200).json({ isSuccess: true, message: "Successfully logout" });
 });
 
@@ -75,10 +82,15 @@ export const generateAccessToken = expressAsyncHandler(async (req:Request, res:R
 
     const refreshToken = req.cookies['refreshToken'];
 
+    if (!refreshToken) {
+        res.status(400).json({ message: "No refresh token provided" });
+        return;
+    }
+
     const { data: { session }, error } = await supabase.auth.refreshSession({ refresh_token: refreshToken });
 
     if(error){
-        res.status(401).json({ message: error.message });
+        res.status(403).json({ message: error.message });
         return;
     }
 

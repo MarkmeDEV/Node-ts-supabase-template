@@ -4,22 +4,20 @@ import supabase from "../../database/SupabaseClient";
 import bcrypt from "bcrypt";
 
 export const getUser = expressAsyncHandler(async (req, res):Promise<void> => {
-    const { id } = req.body;
+    // const { id } = req.body;
+    const id = req.user;
 
     const { data:getUser, error:userError } = await supabase
-    .from('users')
+    .from('users_information')
     .select(`
-        email,
-        users_information(
         first_name,
-        last_name,
-        middle_name
-        )
+        middle_name,
+        last_name
     `)
-    .eq('id', id)
+    .eq('user_id', id)
 
     if(userError){
-        res.status(400).json({ message: userError.message });
+        res.status(400).json({ message: userError.message, id: id });
         return;
     }
 

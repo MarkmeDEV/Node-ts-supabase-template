@@ -21,7 +21,7 @@ export const authenticateJwt = async (req:Request, res:Response, next:NextFuncti
     const { data, error } = await supabase.auth.getUser(accessToken);
 
     if(!data.user?.email?.endsWith('@gmail.com')){
-        res.status(401).json({ message: "Invalid token" });
+        res.status(403).json({ message: "Invalid token" });
         return;
     }
 
@@ -29,6 +29,8 @@ export const authenticateJwt = async (req:Request, res:Response, next:NextFuncti
         res.status(401).json({ message: "Token has expired, please login again" });
         return;
     }
+
+    req.user = data.user?.id;
 
     next();
 
